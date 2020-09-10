@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>ArchApp</title>
+	<meta charset="utf-8">
+	<link rel="manifest" href="/manifest.json">
+	<link rel="stylesheet" href="/app.css">
+	<script src="/app.js"></script>
+	<meta name="HandheldFriendly" content="true">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="apple-touch-icon-precomposed" href="/favicon.png">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="shortcut icon" href="./favicon.ico" type="image/vnd.microsoft.icon">
+	<link rel="icon" href="./favicon.ico" type="image/vnd.microsoft.icon">
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
+</head>
+<body>
+<!-- App -->
+<main id="app">
+	<header id="header">
+		<!-- Header -->
+	</header>
+	<section id="container">
+		<!-- Container -->
+	</section>
+	<footer id="footer">
+		<!-- Footer -->
+	</footer>
+</main>
+</body>
+<script>
+	const DEFAULT_ROUTE = 'users';
+	
+	const renderUsers
+		= (users, container) => {
+			const html = users.reduce((html, user) => {
+				return `${html}
+	      <li class="user">
+	        <h2>${user.name}</h2>
+	        <p><code>${user.role}</code></p>
+	        <p>${user.email}</p>
+	        <p><code>${user.isActive}</code></p>
+	      </li>`;
+			}, '');
+			container.innerHTML = `<ul id="users">${html}</ul>`;
+		}
+	
+	const parseLocation
+		= location => {
+			const params = new URLSearchParams(location);
+			const obj = {};
+			for (const key of params.keys()) {
+				if (params.getAll(key).length > 1) {
+					obj[key] = params.getAll(key);
+				} else {
+					obj[key] = params.get(key);
+				}
+			}
+			return obj;
+		};
+	
+	(async () => {
+		const {href, origin, protocol, host, hostname, port, pathname, search, hash} = parseLocation(window.location);
+		const isRoot = pathname === '/' || pathname.substring(1) === 'index.html';
+		const container = document.querySelector('#container')
+		const data = await fetch(`/api/${isRoot ? DEFAULT_ROUTE : `${pathname.substring(1)}`}`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({href, origin, protocol, host, hostname, port, pathname, search, hash}),
+		}).then(resp => resp.json());
+		renderUsers(data, container);
+	})();
+	
+</script>
+<script>
+	console.log(`
+╔═╗┬─┐┌─┐┬ ┬ ╦╔═╗
+╠═╣├┬┘│  ├─┤ ║╚═╗
+╩ ╩┴└─└─┘┴ ┴╚╝╚═╝
+`);
+</script>
+</html>

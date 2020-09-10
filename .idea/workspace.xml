@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="5afa79e9-0cb7-4a06-ac4f-af9092b7edf2" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+        <option value="HTML File" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1h0GgnKMEXmSuN9JAWfrm2O7whh" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="javascript.nodejs.core.library.configured.version" value="14.9.0" />
+    <property name="javascript.nodejs.core.library.typings.version" value="14.6.3" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.CSS" />
+    <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/scripts" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/static" />
+      <recent name="$PROJECT_DIR$/public" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5afa79e9-0cb7-4a06-ac4f-af9092b7edf2" name="Default Changelist" comment="" />
+      <created>1599140709642</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1599140709642</updated>
+      <workItem from="1599140710661" duration="116927000" />
+      <workItem from="1599748216606" duration="18747000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="2075" y="399" width="640" height="396" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1599770943010">
+      <screen x="1920" y="0" width="1920" height="1200" />
+    </state>
+    <state x="2075" y="399" width="640" height="396" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1200/1920.0.1920.1200@1920.0.1920.1200" timestamp="1599770943010" />
+    <state x="2183" y="358" width="424" height="478" key="FileChooserDialogImpl" timestamp="1599234383540">
+      <screen x="1920" y="0" width="1920" height="1200" />
+    </state>
+    <state x="2183" y="358" width="424" height="478" key="FileChooserDialogImpl/0.0.1920.1200/1920.0.1920.1200@1920.0.1920.1200" timestamp="1599234383540" />
+    <state x="1920" y="238" width="1120" height="713" key="FileDocumentManager.FileCacheConflict" timestamp="1599511945959">
+      <screen x="1920" y="0" width="1920" height="1200" />
+    </state>
+    <state x="1920" y="238" width="1120" height="713" key="FileDocumentManager.FileCacheConflict/0.0.1920.1200/1920.0.1920.1200@1920.0.1920.1200" timestamp="1599511945959" />
+    <state x="2544" y="278" key="run.anything.popup" timestamp="1599498086269">
+      <screen x="1920" y="0" width="1920" height="1200" />
+    </state>
+    <state x="2544" y="278" key="run.anything.popup/0.0.1920.1200/1920.0.1920.1200@1920.0.1920.1200" timestamp="1599498086269" />
+    <state x="2543" y="268" width="672" height="678" key="search.everywhere.popup" timestamp="1599156922283">
+      <screen x="1920" y="0" width="1920" height="1200" />
+    </state>
+    <state x="2543" y="268" width="672" height="678" key="search.everywhere.popup/0.0.1920.1200/1920.0.1920.1200@1920.0.1920.1200" timestamp="1599156922283" />
+  </component>
+</project>

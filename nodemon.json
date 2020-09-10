@@ -1,0 +1,6 @@
+{
+  "watch": ["**/*"],
+  "ignore": ["node_modules/**/node_modules"],
+  "execMap": { "js":  "node index.js" },
+  "ext": "js"
+}

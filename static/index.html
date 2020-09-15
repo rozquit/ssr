@@ -62,15 +62,16 @@
 		};
 	
 	(async () => {
-		const {href, origin, protocol, host, hostname, port, pathname, search, hash} = parseLocation(window.location);
+		const location = parseLocation(window.location);
+		const pathname = location.pathname
 		const isRoot = pathname === '/' || pathname.substring(1) === 'index.html';
-		const container = document.querySelector('#container')
+		const container = document.querySelector('#container');
 		const data = await fetch(`/api/${isRoot ? DEFAULT_ROUTE : `${pathname.substring(1)}`}`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({href, origin, protocol, host, hostname, port, pathname, search, hash}),
+			body: JSON.stringify({location}),
 		}).then(resp => resp.json());
 		renderUsers(data, container);
 	})();

@@ -13,6 +13,6 @@
     "nodemon": "^2.0.4"
   },
   "dependencies": {
-    "puppeteer": "^5.2.1"
+    "puppeteer": "^5.3.0"
   }
 }

@@ -1,33 +1,39 @@
 const url = require('url');
 const arch = require('./arch');
-const puppeteer = require('puppeteer');
+const {ssr, clearCache} = require('./lib/ssr');
+const Scheduler = require('./lib/scheduler');
+const scheduler = new Scheduler();
 
 const PORT = process.env.PORT || 8080;
 const HOST = process.env.HOST || '127.0.0.1';
 
-const ssr
-	= async (host, pathname, query) => {
-		const url = `http://${host}/${pathname.substring(1)}/index.html${query ? `${query}` : ''}`;
-		const browser = await puppeteer.launch({headless: true});
-		const page = await browser.newPage();
-		await page.goto(url, {waitUntil: 'networkidle0'});
-		const html = await page.content();
-		await browser.close();
-		console.log('[ssr]', ['Server Side Rendering via Puppeteer']);
-		return html;
-	};
-
-const routing = {
-	'users': (req, res, callback) => {
+const routeHandler
+	= (req, res, callback) => {
 		const urlObject = url.parse(req.url, true);
 		const host = req.headers.host;
 		const pathname = urlObject.pathname;
 		const query = urlObject.search;
 		ssr(host, pathname, query)
-			.then(html => callback(html))
-			.catch(err => console.dir({err}));
-	},
+		.then(({html, ttRenderMs}) => {
+			res.writeHead(200, {'Server-Timing': `Prerender;dur=${ttRenderMs};desc="Headless render time (ms)"`});
+			callback(html);
+		})
+		.catch(err => console.dir({err}));
+	};
+
+const routing = {
+	'users': routeHandler,
 };
+
+scheduler.setTask('prerender', {
+	interval: 30 * 1000,
+	run: (task, callback) => {
+		clearCache();
+		Promise.all([
+			ssr(`${HOST}:${PORT}`, '/users', false),
+		]).then(() => callback(null)).catch(err => callback(err));
+	}
+});
 
 const server = arch({routing});
 

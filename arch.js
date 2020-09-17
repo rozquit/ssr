@@ -4,7 +4,7 @@ const fs = require('fs');
 const http = require('http');
 const path = require('path');
 const url = require('url');
-const {ssr} = require('./utils/ssr');
+const {ssr, prerender} = require('./utils/ssr');
 
 
 const STATIC_PATH = path.join(process.cwd(), process.env.STATIC_PATH || './static');
@@ -28,11 +28,11 @@ const routeHandler
 		const pathname = urlObject.pathname;
 		const query = urlObject.search;
 		ssr(host, pathname, query)
-		.then(({html, ttRenderMs}) => {
-			res.writeHead(200, {'Server-Timing': `Prerender;dur=${ttRenderMs};desc="Headless render time (ms)"`, ...headers});
-			callback(html);
-		})
-		.catch(err => console.dir({err}));
+			.then(({html, ttRenderMs}) => {
+				res.writeHead(200, {'Server-Timing': `Prerender;dur=${ttRenderMs};desc="Headless render time (ms)"`, ...headers});
+				callback(html);
+			})
+			.catch(err => console.dir({err}));
 	};
 
 const createRouting
@@ -183,7 +183,10 @@ function arch(options) {
 		throw new TypeError('Options must be an object');
 	}
 	const routes = options.routes || {};
-	return http.createServer(async (req, res) => await httpHandler(createRouting(routes), req, res));
+	const routing = createRouting(routes);
+	const server = http.createServer(async (req, res) => await httpHandler(routing, req, res));
+	prerender(options);
+	return server;
 }
 
 arch.arch = arch;

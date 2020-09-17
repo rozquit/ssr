@@ -1,4 +1,6 @@
 const puppeteer = require('puppeteer');
+const Scheduler = require('../lib/scheduler');
+const scheduler = new Scheduler();
 
 const RENDER_CACHE = new Map();
 
@@ -55,4 +57,27 @@ const ssr
 	return {html, ttRenderMs};
 };
 
-module.exports = {ssr, clearCache};
+const prerender
+	= options => {
+	scheduler.setTask(`prerender`, {
+		repeat: options.prerender.repeat,
+		run: (task, callback) => {
+			clearCache();
+			Promise.all([
+				ssr(`${options.host}:${options.port}`, '/', null),
+				ssr(`${options.host}:${options.port}`, '/users', null),
+			])
+				.then(() => callback(null))
+				.then(() => scheduler.setTask(`prerender`, task))
+				.catch(err => {
+					callback(err);
+					scheduler.stopTask(`prerender`);
+				});
+		}
+	});
+}
+
+module.exports = {
+	ssr,
+	prerender,
+};

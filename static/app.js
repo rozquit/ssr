@@ -64,7 +64,7 @@ const ssr = async () => {
 	const pathname = location.pathname
 	const isRoot = pathname === '/' || pathname.substring(1) === 'index.html';
 	const container = document.querySelector('#container');
-	const PRE_RENDERED = isRoot ? null : container.querySelector(`#${pathname.substring(1)}`);
+	const PRE_RENDERED = isRoot ? null : container.querySelector(`#${pathname.substring(1).replace('/', '')}`);
 	if(!PRE_RENDERED) {
 		const data = await fetch(`/${API_PATH.substring(2)}/${isRoot ? HOME : `${pathname.substring(1)}`}`, {
 			method: 'POST',

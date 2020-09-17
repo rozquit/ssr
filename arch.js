@@ -36,9 +36,9 @@ const routeHandler
 	};
 
 const createRouting
-	= routes => {
+	= api => {
 		const routing = {};
-		for (const [key, value] of Object.entries(routes)) {
+		for (const [key, value] of Object.entries(api)) {
 			routing[key] = typeof value === 'function'
 				? value
 				: routeHandler(value);
@@ -182,8 +182,8 @@ function arch(options) {
 	if (typeof options !== 'object') {
 		throw new TypeError('Options must be an object');
 	}
-	const routes = options.routes || {};
-	const routing = createRouting(routes);
+	const api = options.api || {};
+	const routing = createRouting(api);
 	const server = http.createServer(async (req, res) => await httpHandler(routing, req, res));
 	prerender(options);
 	return server;

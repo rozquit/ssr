@@ -59,6 +59,19 @@ const renderUsers
 	container.innerHTML = `<ul id="users">${html}</ul>`;
 }
 
+const routing = (route, data, container) => {
+	switch (route) {
+		case '/':
+			renderUsers(data, container);
+			break
+		case '/users':
+			renderUsers(data, container);
+			break;
+		default:
+			renderUsers(data, container);
+	}
+};
+
 const ssr = async () => {
 	const location = parseLocation(window.location);
 	const pathname = location.pathname
@@ -73,7 +86,7 @@ const ssr = async () => {
 			},
 			body: JSON.stringify({location}),
 		}).then(resp => resp.json());
-		renderUsers(data, container);
+		routing(pathname, data, container);
 	}
 };
 

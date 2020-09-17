@@ -1,5 +1,8 @@
 'use strict';
 
+const API_PATH = './api';
+const HOME = 'users';
+
 const registerServiceWorker = () => {
 	if (!Reflect.has(navigator, 'serviceWorker')) {
 		console.log('Service workers are not supported');
@@ -28,7 +31,56 @@ const registerServiceWorker = () => {
 	});
 };
 
-window.addEventListener('load', () => registerServiceWorker());
+const parseLocation
+	= location => {
+	const params = new URLSearchParams(location);
+	const obj = {};
+	for (const key of params.keys()) {
+		if (params.getAll(key).length > 1) {
+			obj[key] = params.getAll(key);
+		} else {
+			obj[key] = params.get(key);
+		}
+	}
+	return obj;
+};
+
+const renderUsers
+	= (users, container) => {
+	const html = users.reduce((html, user) => {
+		return `${html}
+	      <li class="user">
+	        <h2>${user.name}</h2>
+	        <p><code>${user.role}</code></p>
+	        <p>${user.email}</p>
+	        <p><code>${user.isActive}</code></p>
+	      </li>`;
+	}, '');
+	container.innerHTML = `<ul id="users">${html}</ul>`;
+}
+
+const ssr = async () => {
+	const location = parseLocation(window.location);
+	const pathname = location.pathname
+	const isRoot = pathname === '/' || pathname.substring(1) === 'index.html';
+	const container = document.querySelector('#container');
+	const PRE_RENDERED = isRoot ? null : container.querySelector(`#${pathname.substring(1)}`);
+	if(!PRE_RENDERED) {
+		const data = await fetch(`/${API_PATH.substring(2)}/${isRoot ? HOME : `${pathname.substring(1)}`}`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({location}),
+		}).then(resp => resp.json());
+		renderUsers(data, container);
+	}
+};
+
+window.addEventListener('load', () => {
+	registerServiceWorker();
+	ssr().catch(err => console.dir({err}));
+});
 
 window.addEventListener('beforeinstallprompt', event => {
 	console.log('Installing PWA');

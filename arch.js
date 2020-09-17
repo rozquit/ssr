@@ -4,6 +4,8 @@ const fs = require('fs');
 const http = require('http');
 const path = require('path');
 const url = require('url');
+const {ssr} = require('./lib/ssr');
+
 
 const STATIC_PATH = path.join(process.cwd(), process.env.STATIC_PATH || './static');
 const API_PATH = process.env.API_PATH || './api';
@@ -17,6 +19,32 @@ const MIME_TYPES = {
 	json: 'application/json',
 	svg: 'image/svg+xml',
 };
+
+const routeHandler
+	= headers =>
+	(req, res, callback) => {
+		const urlObject = url.parse(req.url, true);
+		const host = req.headers.host;
+		const pathname = urlObject.pathname;
+		const query = urlObject.search;
+		ssr(host, pathname, query)
+		.then(({html, ttRenderMs}) => {
+			res.writeHead(200, {'Server-Timing': `Prerender;dur=${ttRenderMs};desc="Headless render time (ms)"`, ...headers});
+			callback(html);
+		})
+		.catch(err => console.dir({err}));
+	};
+
+const createRouting
+	= routes => {
+		const routing = {};
+		for (const [key, value] of Object.entries(routes)) {
+			routing[key] = typeof value === 'function'
+				? value
+				: routeHandler(value);
+		}
+		return routing;
+	};
 
 const types = {
 	object: ([data], callback) => callback(JSON.stringify(data)),
@@ -106,7 +134,7 @@ const switchTo
 	= (type, routing) =>
 	async (pathname, req, res) => {
 		switch (type) {
-			case 'api':
+			case API_PATH.substring(2):
 				const [endpoint] = pathname.substring(5).split('/');
 				const method = api.get(endpoint);
 				const args = await receiveArgs(req).catch(err => console.dir({err}));
@@ -143,8 +171,9 @@ const httpHandler
 		const pathname = urlObject.pathname;
 		const query = urlObject.search;
 		console.log('[httpHandler | pathname | query]', [pathname, query]);
-		pathname.match(/api/)
-			? await switchTo('api')(pathname, req, res)
+		const apiRegExp = new RegExp(API_PATH.substring(2));
+		pathname.match(apiRegExp)
+			? await switchTo(API_PATH.substring(2))(pathname, req, res)
 			: await switchTo('static', routing)(pathname, req, res);
 	};
 
@@ -153,8 +182,8 @@ function arch(options) {
 	if (typeof options !== 'object') {
 		throw new TypeError('Options must be an object');
 	}
-	const routing = options.routing || {};
-	return http.createServer(async (req, res) => await httpHandler(routing, req, res));
+	const routes = options.routes || {};
+	return http.createServer(async (req, res) => await httpHandler(createRouting(routes), req, res));
 }
 
 arch.arch = arch;

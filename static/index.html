@@ -31,53 +31,6 @@
 </main>
 </body>
 <script>
-	const DEFAULT_ROUTE = 'users';
-	
-	const renderUsers
-		= (users, container) => {
-			const html = users.reduce((html, user) => {
-				return `${html}
-	      <li class="user">
-	        <h2>${user.name}</h2>
-	        <p><code>${user.role}</code></p>
-	        <p>${user.email}</p>
-	        <p><code>${user.isActive}</code></p>
-	      </li>`;
-			}, '');
-			container.innerHTML = `<ul id="users">${html}</ul>`;
-		}
-	
-	const parseLocation
-		= location => {
-			const params = new URLSearchParams(location);
-			const obj = {};
-			for (const key of params.keys()) {
-				if (params.getAll(key).length > 1) {
-					obj[key] = params.getAll(key);
-				} else {
-					obj[key] = params.get(key);
-				}
-			}
-			return obj;
-		};
-	
-	(async () => {
-		const location = parseLocation(window.location);
-		const pathname = location.pathname
-		const isRoot = pathname === '/' || pathname.substring(1) === 'index.html';
-		const container = document.querySelector('#container');
-		const data = await fetch(`/api/${isRoot ? DEFAULT_ROUTE : `${pathname.substring(1)}`}`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({location}),
-		}).then(resp => resp.json());
-		renderUsers(data, container);
-	})();
-	
-</script>
-<script>
 	console.log(`
 ╔═╗┬─┐┌─┐┬ ┬ ╦╔═╗
 ╠═╣├┬┘│  ├─┤ ║╚═╗

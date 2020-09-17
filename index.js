@@ -1,5 +1,5 @@
 const arch = require('./arch');
-const {ssr, clearCache} = require('./lib/ssr');
+const {ssr, clearCache} = require('./utils/ssr');
 const Scheduler = require('./lib/scheduler');
 const scheduler = new Scheduler();
 

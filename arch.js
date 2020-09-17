@@ -4,7 +4,7 @@ const fs = require('fs');
 const http = require('http');
 const path = require('path');
 const url = require('url');
-const {ssr} = require('./lib/ssr');
+const {ssr} = require('./utils/ssr');
 
 
 const STATIC_PATH = path.join(process.cwd(), process.env.STATIC_PATH || './static');

@@ -20,12 +20,8 @@ const search
 // http://127.0.0.1:8080/users
 const users = async (body) => {
 	console.log('[api | users | body]', [body]);
-	let query;
-	if (body.location) {
-		query = body.location.search;
-	} else {
-		query = null
-	}
+	let query = null;
+	if (body.location) query = body.location.search;
 	return query
 		? search(query)
 		: [

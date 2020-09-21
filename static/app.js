@@ -47,21 +47,23 @@ const parseLocation
 
 const renderUsers
 	= (users, container) => {
-	const html = users.reduce((html, user) => {
-		return `${html}
-	      <li class="user">
-	        <h2>${user.name}</h2>
-	        <p><code>${user.role}</code></p>
-	        <p>${user.email}</p>
-	        <p><code>${user.isActive}</code></p>
-	      </li>`;
-	}, '');
-	container.innerHTML = `<ul id="users">${html}</ul>`;
-}
+		const html = users.reduce((html, user) => {
+			return `${html}
+		      <li class="user">
+		        <h2>${user.name}</h2>
+		        <p><code>${user.role}</code></p>
+		        <p>${user.email}</p>
+		        <p><code>${user.isActive}</code></p>
+		      </li>`;
+		}, '');
+		container.innerHTML = `<ul id="users">${html}</ul>`;
+	};
 
-const renderNotFound = (container) => {
-	return container.innerHTML = `<section id="notfound">404 Not Found</section>`;
-}
+const renderNotFound
+	= container =>
+	container.innerHTML
+		= `<section id="notfound">404 Not Found</section>`;
+
 
 const routing = (route, data, container) => {
 	switch (route) {

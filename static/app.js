@@ -59,6 +59,10 @@ const renderUsers
 	container.innerHTML = `<ul id="users">${html}</ul>`;
 }
 
+const renderNotFound = (container) => {
+	return container.innerHTML = `<section id="notfound">404 Not Found</section>`;
+}
+
 const routing = (route, data, container) => {
 	switch (route) {
 		case '/':
@@ -68,7 +72,7 @@ const routing = (route, data, container) => {
 			renderUsers(data, container);
 			break;
 		default:
-			renderUsers(data, container);
+			renderNotFound(container);
 	}
 };
 

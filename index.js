@@ -6,13 +6,11 @@ const PORT = process.env.PORT || 8080;
 const options = {
 	host: HOST,
 	port: PORT,
-	api: {
-		'users': {},
-	},
 	prerender: {
 		repeat: 30 * 1000,
+		pages: ['/', '/users'],
 	},
-}
+};
 
 const server = arch(options);
 

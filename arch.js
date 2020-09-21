@@ -6,9 +6,11 @@ const path = require('path');
 const url = require('url');
 const {ssr, prerender} = require('./utils/ssr');
 
+const STATIC = process.env.STATIC || 'static';
+const API = process.env.API || 'api';
 
-const STATIC_PATH = path.join(process.cwd(), process.env.STATIC_PATH || './static');
-const API_PATH = process.env.API_PATH || './api';
+const STATIC_PATH = path.join(process.cwd(), `./${STATIC}`);
+const API_PATH = `./${API}`;
 
 const MIME_TYPES = {
 	html: 'text/html; charset=UTF-8',
@@ -20,30 +22,20 @@ const MIME_TYPES = {
 	svg: 'image/svg+xml',
 };
 
+const api = new Map();
+
 const routeHandler
-	= headers =>
-	(req, res, callback) => {
+	= (req, res, callback) => {
 		const urlObject = url.parse(req.url, true);
 		const host = req.headers.host;
 		const pathname = urlObject.pathname;
 		const query = urlObject.search;
 		ssr(host, pathname, query)
 			.then(({html, ttRenderMs}) => {
-				res.writeHead(200, {'Server-Timing': `Prerender;dur=${ttRenderMs};desc="Headless render time (ms)"`, ...headers});
+				res.writeHead(200, {'Server-Timing': `Prerender;dur=${ttRenderMs};desc="Headless render time (ms)"`});
 				callback(html);
 			})
 			.catch(err => console.dir({err}));
-	};
-
-const createRouting
-	= api => {
-		const routing = {};
-		for (const [key, value] of Object.entries(api)) {
-			routing[key] = typeof value === 'function'
-				? value
-				: routeHandler(value);
-		}
-		return routing;
 	};
 
 const types = {
@@ -69,8 +61,6 @@ const serveFile
 		if (!filePath.startsWith(STATIC_PATH)) return null;
 		return fs.createReadStream(filePath);
 	};
-
-const api = new Map();
 
 const receiveArgs
 	= async req =>
@@ -131,10 +121,10 @@ const httpError
 	};
 
 const switchTo
-	= (type, routing) =>
+	= type =>
 	async (pathname, req, res) => {
 		switch (type) {
-			case API_PATH.substring(2):
+			case API:
 				const [endpoint] = pathname.substring(5).split('/');
 				const method = api.get(endpoint);
 				const args = await receiveArgs(req).catch(err => console.dir({err}));
@@ -148,7 +138,7 @@ const switchTo
 					httpError(res, 500, 'Server Error');
 				}
 				break;
-			case 'static':
+			case STATIC:
 				const file = path.basename(pathname);
 				const fileExt = path.extname(file).substring(1);
 				if (MIME_TYPES[fileExt]) {
@@ -157,7 +147,9 @@ const switchTo
 					if (stream) stream.pipe(res);
 				} else {
 					const route = pathname.substring(1);
-					const data = routing[route.replace(/\//, '')];
+					const data = api.has(route)
+						? routeHandler
+						: undefined;
 					serve(data, req, res);
 				}
 				break;
@@ -165,16 +157,16 @@ const switchTo
 	}
 
 const httpHandler
-	= async (routing, req, res) => {
+	= async (req, res) => {
 		const urlString = req.url === '/' ? '/index.html' : req.url;
 		const urlObject = url.parse(urlString, true);
 		const pathname = urlObject.pathname;
 		const query = urlObject.search;
 		console.log('[httpHandler | pathname | query]', [pathname, query]);
-		const apiRegExp = new RegExp(API_PATH.substring(2));
+		const apiRegExp = new RegExp(API);
 		pathname.match(apiRegExp)
-			? await switchTo(API_PATH.substring(2))(pathname, req, res)
-			: await switchTo('static', routing)(pathname, req, res);
+			? await switchTo(API)(pathname, req, res)
+			: await switchTo(STATIC)(pathname, req, res);
 	};
 
 function arch(options) {
@@ -182,11 +174,9 @@ function arch(options) {
 	if (typeof options !== 'object') {
 		throw new TypeError('Options must be an object');
 	}
-	const api = options.api || {};
-	const routing = createRouting(api);
-	const server = http.createServer(async (req, res) => await httpHandler(routing, req, res));
-	prerender(options);
-	return server;
+	const pages = options.prerender.pages || [];
+	if (pages.length) prerender(options);
+	return http.createServer(async (req, res) => await httpHandler(req, res));
 }
 
 arch.arch = arch;

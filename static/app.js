@@ -57,7 +57,7 @@ const renderUsers = (users, container) => {
           <dd>${index}</dd>
         </dl>`
   }, '')
-  container.innerHTML = `${html}`
+  container.innerHTML = `<section id="users">${html}</section>`
 }
 
 const renderNotFound = container => (container.innerHTML = '<section id="notfound">404 Not Found</section>')

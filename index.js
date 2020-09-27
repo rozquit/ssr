@@ -1,16 +1,14 @@
-const arch = require('./arch')
+const server = require('./server')
 const { HOST, PORT } = require('./config')
 
 const options = {
   logger: true,
   prerender: {
-  	repeat: 30 * 1000,
-  	pages: ['/', '/users']
+    repeat: 30 * 1000,
+    pages: ['/', '/users']
   }
 }
 
-const server = arch(options)
-
-server.listen(PORT, HOST, () => {
-  console.log('[arch]', `server listening on http://${HOST}:${PORT}`)
+server(options).listen(PORT, HOST, () => {
+  console.log('[server]', `listening on http://${HOST}:${PORT}`)
 })

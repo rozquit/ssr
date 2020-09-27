@@ -1,0 +1,9 @@
+.idea
+.git
+.clinic
+node_modules
+etc
+static/*
+!static/app.js
+!static/sw.js
+tmp

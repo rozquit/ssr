@@ -1,7 +1,7 @@
 {
-  "name": "archjs",
+  "name": "ssr",
   "version": "0.0.1",
-  "description": "Isomorphic Microframework",
+  "description": "SSR with Puppeteer (Proof of Concept)",
   "license": "ISC",
   "author": "Artem Tolstykh",
   "main": "index.js",
@@ -15,12 +15,12 @@
   },
   "dependencies": {
     "abstract-logging": "*",
-    "pg": "*",
     "pino": "*",
     "puppeteer": "*"
   },
   "devDependencies": {
     "nodemon": "*",
+    "prettier": "*",
     "standard": "*"
   },
   "engines": {

@@ -155,7 +155,6 @@ function server (options) {
   if (typeof options !== 'object') {
     throw new TypeError('Options must be an object')
   }
-
   options.prerender = options.prerender || {}
   options.prerender.pages = options.prerender.pages || []
   const pages = options.prerender.pages

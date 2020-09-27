@@ -164,6 +164,6 @@ function server (options) {
   return http.createServer(httpHandler(logger))
 }
 
-server.arch = server
+server.server = server
 server.default = server
 module.exports = server

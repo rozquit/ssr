@@ -6,13 +6,13 @@ const list = [
   {
     name: 'Mr. Arch',
     role: 'admin',
-    email: 'arttolstykh@gmail.com',
+    email: 'arch@example.com',
     isActive: true
   },
   {
     name: 'Manager',
     role: 'manager',
-    email: 'arttolstykh@gmail.com',
+    email: 'manager@example.com',
     isActive: false
   },
   {

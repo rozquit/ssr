@@ -15,11 +15,11 @@
   },
   "dependencies": {
     "abstract-logging": "*",
-    "pino": "*",
+    "pino": "^6.7.0",
     "puppeteer": "*"
   },
   "devDependencies": {
-    "nodemon": "*",
+    "nodemon": "^2.0.5",
     "prettier": "*",
     "standard": "*"
   },
